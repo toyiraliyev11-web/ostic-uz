@@ -25,7 +25,7 @@ jobs:
       - name: Unpack site
         run: |
           rm -rf dist && mkdir dist
-          unzip -q site.zip -d dist
+          for z in *.zip; do unzip -q -o "$z" -d dist; done
           touch dist/.nojekyll
           ls dist
       - uses: actions/configure-pages@v5
