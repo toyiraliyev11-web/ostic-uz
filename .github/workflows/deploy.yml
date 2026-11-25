@@ -15,11 +15,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - name: Unpack site
@@ -34,5 +31,18 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+
+  # A separate job, started only after the artifact is finalised. When the upload and
+  # the deploy shared one job, deploy-pages sometimes ran before the artifact was
+  # listed and failed with "Found 0 artifact(s)" (seen on three pushes in a row).
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Let the artifact index settle
+        run: sleep 10
       - id: deployment
         uses: actions/deploy-pages@v4
