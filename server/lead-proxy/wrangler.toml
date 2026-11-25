@@ -1,0 +1,7 @@
+name = "ostic-lead"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+
+# Secrets are never written here. Set them with:
+#   npx wrangler secret put TG_TOKEN
+#   npx wrangler secret put TG_CHAT
