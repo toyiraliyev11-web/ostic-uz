@@ -12,11 +12,12 @@ const ALLOWED_ORIGINS = ['https://ostic.uz', 'https://www.ostic.uz'];
 const MAX_BODY_BYTES = 8000;
 const FIELD_LIMITS = {
   name: 80, company: 90, phone: 32, email: 90, location: 90,
-  direction: 60, project: 2500, lang: 2
+  direction: 60, project: 2500, lang: 2, source: 40
 };
 const LABELS = [
   ['name', 'Имя'], ['company', 'Компания'], ['phone', 'Телефон'], ['email', 'Почта'],
-  ['location', 'Локация'], ['direction', 'Направление'], ['project', 'О проекте'], ['lang', 'Язык']
+  ['location', 'Локация'], ['direction', 'Направление'], ['project', 'О проекте'], ['source', 'Источник'],
+  ['lang', 'Язык']
 ];
 
 function corsHeaders(origin) {
@@ -73,15 +74,41 @@ export default {
     try { lead = JSON.parse(raw); } catch (e) { return reply(400, origin, true); }
     if (!lead || typeof lead !== 'object' || Array.isArray(lead)) return reply(400, origin, true);
 
+    // Honeypot: the form has a hidden "website" field people never see. A bot that
+    // fills it gets a normal-looking reply and nothing is sent.
+    if (clean(lead.website, 200)) return reply(204, origin, true);
     // The form requires a brief of at least 8 characters; hold the line here too.
     if (clean(lead.project, FIELD_LIMITS.project).length < 8) return reply(422, origin, true);
-    if (!env.TG_TOKEN || !env.TG_CHAT) return reply(500, origin, true);
+    const hasTg = !!(env.TG_TOKEN && env.TG_CHAT);
+    const hasSheet = !!(env.SHEET_URL && env.SHEET_SECRET);
+    if (!hasTg && !hasSheet) return reply(500, origin, true);
 
-    const res = await fetch('https://api.telegram.org/bot' + env.TG_TOKEN + '/sendMessage', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: env.TG_CHAT, text: buildMessage(lead), disable_web_page_preview: true })
-    });
-    return reply(res.ok ? 204 : 502, origin, true);
+    let tgOk = false;
+    let sheetOk = false;
+    if (hasTg) {
+      try {
+        const res = await fetch('https://api.telegram.org/bot' + env.TG_TOKEN + '/sendMessage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: env.TG_CHAT, text: buildMessage(lead), disable_web_page_preview: true })
+        });
+        tgOk = res.ok;
+      } catch (e) { tgOk = false; }
+    }
+    // Every lead is also kept as a row in a Google Sheet, so a Telegram outage
+    // cannot lose it.
+    if (hasSheet) {
+      const row = { secret: env.SHEET_SECRET };
+      Object.keys(FIELD_LIMITS).forEach((k) => { row[k] = clean(lead[k], FIELD_LIMITS[k]); });
+      try {
+        const res = await fetch(env.SHEET_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(row)
+        });
+        sheetOk = res.ok;
+      } catch (e) { sheetOk = false; }
+    }
+    return reply(tgOk || sheetOk ? 204 : 502, origin, true);
   }
 };

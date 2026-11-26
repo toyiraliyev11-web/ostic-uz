@@ -8,4 +8,4 @@ if (!m) { console.error('component script not found'); process.exit(1); }
 const src = 'class DCLogic { constructor(p) { this.props = p; } }\n' + m[1] + '\nreturn Component;';
 const Component = new Function(src)();
 const c = new Component({});
-process.stdout.write(JSON.stringify({ catalog: c.rawCatalog(), articles: c.rawArticles(), stockAsOf: c.STOCK_AS_OF }));
+process.stdout.write(JSON.stringify({ catalog: c.rawCatalog(), articles: c.rawArticles(), stock: c.rawStock(), stockAsOf: c.STOCK_AS_OF }));

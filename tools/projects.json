@@ -1,0 +1,29 @@
+{
+  "_note": "Fill 'systems', 'brands', 'year' and 'scope' for a project and run tools/build_extra_pages.py: a page of its own is built only for projects with 'systems' filled in. Do not invent anything here; leave a field empty if unsure.",
+  "projects": [
+    {"slug": "tashkent-humo-airport", "img": "p1.webp", "status": "done",
+     "name": {"ru": "Международный аэропорт Ташкент-Humo", "uz": "Toshkent-Humo xalqaro aeroporti", "en": "Tashkent-Humo International Airport"},
+     "type": {"ru": "Аэропорт", "uz": "Aeroport", "en": "Airport"},
+     "year": "", "brands": [], "systems": {"ru": [], "uz": [], "en": []}, "scope": {"ru": "", "uz": "", "en": ""}},
+    {"slug": "sergeli-customs-warehouse", "img": "p2.webp", "status": "done",
+     "name": {"ru": "Таможенный склад Сергели", "uz": "Sergeli bojxona ombori", "en": "Sergeli Customs Warehouse"},
+     "type": {"ru": "Таможня · складской комплекс", "uz": "Bojxona · ombor majmuasi", "en": "Customs · warehouse complex"},
+     "year": "", "brands": [], "systems": {"ru": [], "uz": [], "en": []}, "scope": {"ru": "", "uz": "", "en": ""}},
+    {"slug": "diplomacy-lyceum", "img": "p3.webp", "status": "done",
+     "name": {"ru": "Лицей дипломатии", "uz": "Diplomatiya litseyi", "en": "Diplomacy Lyceum"},
+     "type": {"ru": "Образовательное учреждение", "uz": "Ta’lim muassasasi", "en": "Educational institution"},
+     "year": "", "brands": [], "systems": {"ru": [], "uz": [], "en": []}, "scope": {"ru": "", "uz": "", "en": ""}},
+    {"slug": "nurafshon-residential", "img": "p4.webp", "status": "done",
+     "name": {"ru": "Жилой дом Нурафшон", "uz": "Nurafshon turar-joy uyi", "en": "Nurafshon Residential Building"},
+     "type": {"ru": "Жильё", "uz": "Turar-joy", "en": "Residential"},
+     "year": "", "brands": [], "systems": {"ru": [], "uz": [], "en": []}, "scope": {"ru": "", "uz": "", "en": ""}},
+    {"slug": "multifunctional-parking", "img": "p5.webp", "status": "in-progress",
+     "name": {"ru": "Многофункциональная парковка", "uz": "Ko‘p funksiyali parking", "en": "Multifunctional Parking"},
+     "type": {"ru": "Паркинг", "uz": "Parking", "en": "Parking"},
+     "year": "", "brands": [], "systems": {"ru": [], "uz": [], "en": []}, "scope": {"ru": "", "uz": "", "en": ""}},
+    {"slug": "radisson", "img": "p6.webp", "status": "in-progress",
+     "name": {"ru": "Radisson", "uz": "Radisson", "en": "Radisson"},
+     "type": {"ru": "Гостиница", "uz": "Mehmonxona", "en": "Hotel"},
+     "year": "", "brands": [], "systems": {"ru": [], "uz": [], "en": []}, "scope": {"ru": "", "uz": "", "en": ""}}
+  ]
+}
