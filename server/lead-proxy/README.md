@@ -38,6 +38,21 @@ npx wrangler deploy
 
 `secret put` so'raganda tokenni o'zingiz yozasiz (ekranda ko'rinmaydi). Oxirgi buyruq Worker manzilini chiqaradi.
 
+### Arizalar OSTIC platformaga ham tushsin (ixtiyoriy)
+
+Worker arizani `cloud.ostic.uz` dagi "Saytdan arizalar" bo'limiga ham yuboradi. So'rov serverdan serverga boradi,
+kalit saytda turmaydi. Batafsil ma'lumot platforma repo'sidagi `docs/public-site.md` faylida.
+
+1. Kamida 32 belgili tasodifiy qator yarating (masalan parol menejerida). Uni chatga yoki faylga yozmang.
+2. Platforma serverining `backend/.env` fayliga `SITE_LEAD_SECRET=<shu qator>` va `PUBLIC_SITE_COMPANY_TIN=<EIGHT DOORS STIR>`
+   ni qo'shing, API'ni qayta ishga tushiring.
+3. Worker'ga ikkita **Secret** qo'shing:
+   - `PLATFORM_LEAD_URL` = `https://cloud.ostic.uz/api/v1/public/site-leads`
+   - `PLATFORM_LEAD_SECRET` = o'sha qator
+4. Qayta **Deploy** qiling. Saytdan sinov arizasini yuboring: u platformadagi "Saytdan arizalar" sahifasida ko'rinishi kerak.
+
+Telegram, Google Sheet yoki platformadan kamida biri arizani qabul qilsa, tashrif buyuruvchi "yuborildi" deb ko'radi.
+
 ## 3. Saytni ulash
 
 Worker manzilini menga yuboring. Men `index.html` dagi `LEAD_WEBHOOK` ga qo'yaman va saytni qayta

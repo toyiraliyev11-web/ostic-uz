@@ -81,10 +81,14 @@ export default {
     if (clean(lead.project, FIELD_LIMITS.project).length < 8) return reply(422, origin, true);
     const hasTg = !!(env.TG_TOKEN && env.TG_CHAT);
     const hasSheet = !!(env.SHEET_URL && env.SHEET_SECRET);
-    if (!hasTg && !hasSheet) return reply(500, origin, true);
+    // The OSTIC platform (cloud.ostic.uz): the lead lands in "Saytdan arizalar". Server to server only;
+    // the shared secret lives in this Worker's secrets and the platform's .env, never in the site.
+    const hasPlatform = !!(env.PLATFORM_LEAD_URL && env.PLATFORM_LEAD_SECRET && String(env.PLATFORM_LEAD_URL).startsWith('https://'));
+    if (!hasTg && !hasSheet && !hasPlatform) return reply(500, origin, true);
 
     let tgOk = false;
     let sheetOk = false;
+    let platformOk = false;
     if (hasTg) {
       try {
         const res = await fetch('https://api.telegram.org/bot' + env.TG_TOKEN + '/sendMessage', {
@@ -109,6 +113,19 @@ export default {
         sheetOk = res.ok;
       } catch (e) { sheetOk = false; }
     }
-    return reply(tgOk || sheetOk ? 204 : 502, origin, true);
+    if (hasPlatform) {
+      const fields = {};
+      Object.keys(FIELD_LIMITS).forEach((k) => { fields[k] = clean(lead[k], FIELD_LIMITS[k]); });
+      try {
+        const res = await fetch(env.PLATFORM_LEAD_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Site-Lead-Secret': env.PLATFORM_LEAD_SECRET },
+          body: JSON.stringify(fields),
+          redirect: 'manual'
+        });
+        platformOk = res.ok;
+      } catch (e) { platformOk = false; }
+    }
+    return reply(tgOk || sheetOk || platformOk ? 204 : 502, origin, true);
   }
 };
