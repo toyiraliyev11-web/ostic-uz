@@ -53,7 +53,7 @@ tgOk = true; sheetOk = true; sent = [];
 r = await w.fetch(req('POST', good), { SHEET_URL: env2.SHEET_URL, SHEET_SECRET: 'x' }); assert.equal(r.status, 204); assert.equal(sent.length, 1);
 
 // The OSTIC platform: the secret goes in a header (not the body), only known fields, https only
-const env3 = { ...env, PLATFORM_LEAD_URL: 'https://cloud.ostic.uz/api/v1/public/site-leads', PLATFORM_LEAD_SECRET: 'p'.repeat(40) };
+const env3 = { ...env, PLATFORM_LEAD_URL: 'https://cloud.osticlinks.uz/api/v1/public/site-leads', PLATFORM_LEAD_SECRET: 'p'.repeat(40) };
 sent = [];
 r = await w.fetch(req('POST', good), env3); assert.equal(r.status, 204);
 assert.equal(sent.length, 2);
@@ -67,7 +67,7 @@ sent = [];
 r = await w.fetch(req('POST', good), { PLATFORM_LEAD_URL: env3.PLATFORM_LEAD_URL, PLATFORM_LEAD_SECRET: 'x'.repeat(40) }); assert.equal(r.status, 204); assert.equal(sent.length, 1);
 // A plain http address is never used (the secret would travel in clear)
 sent = [];
-r = await w.fetch(req('POST', good), { PLATFORM_LEAD_URL: 'http://cloud.ostic.uz/x', PLATFORM_LEAD_SECRET: 'x'.repeat(40) }); assert.equal(r.status, 500); assert.equal(sent.length, 0);
+r = await w.fetch(req('POST', good), { PLATFORM_LEAD_URL: 'http://cloud.osticlinks.uz/x', PLATFORM_LEAD_SECRET: 'x'.repeat(40) }); assert.equal(r.status, 500); assert.equal(sent.length, 0);
 
 r = await w.fetch(req('POST', good), { ...env, RL: { limit: async () => ({ success: false }) } }); assert.equal(r.status, 429);
 assert.equal(buildMessage({ project: 'a\u0000bcdefghij' }).includes('\u0000'), false);

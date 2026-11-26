@@ -81,7 +81,7 @@ export default {
     if (clean(lead.project, FIELD_LIMITS.project).length < 8) return reply(422, origin, true);
     const hasTg = !!(env.TG_TOKEN && env.TG_CHAT);
     const hasSheet = !!(env.SHEET_URL && env.SHEET_SECRET);
-    // The OSTIC platform (cloud.ostic.uz): the lead lands in "Saytdan arizalar". Server to server only;
+    // The OSTIC platform (cloud.osticlinks.uz): the lead lands in "Saytdan arizalar". Server to server only;
     // the shared secret lives in this Worker's secrets and the platform's .env, never in the site.
     const hasPlatform = !!(env.PLATFORM_LEAD_URL && env.PLATFORM_LEAD_SECRET && String(env.PLATFORM_LEAD_URL).startsWith('https://'));
     if (!hasTg && !hasSheet && !hasPlatform) return reply(500, origin, true);
